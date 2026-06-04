@@ -31,12 +31,13 @@ st.markdown("""
         font-family: 'Outfit', sans-serif;
     }
     
-    /* 🚨 BRANDING CLEANUP: Hides GitHub icons, Streamlit Main Menus, and Footers 🚨 */
+    /* Strict White-Label production overrides */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     .stAppDeployButton {display: none !important;}
     [data-testid="stDecoration"] {display: none !important;}
+    [data-testid="stStatusWidget"] {display: none !important;}
     
     .app-title {
         font-weight: 700;
