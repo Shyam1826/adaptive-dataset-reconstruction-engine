@@ -23,20 +23,30 @@ st.set_page_config(
 
 # Premium Google Typeface Branding Stylesheet injection
 # Custom CSS for modern design aesthetics and white-label branding
+# Custom CSS for modern design aesthetics and strict white-label layout
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;500;600;700&display=swap');
+    
+    /* 🚨 STRICT ANTI-FLASH BLOCK: Hides the container spaces entirely before elements assemble 🚨 */
+    header, [data-testid="stHeader"], .stAppHeader, [data-testid="stDecoration"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+    }
+    
+    /* Force main workspace canvas to shift up and reclaim hidden header padding */
+    .main .block-container {
+        padding-top: 2rem !important;
+    }
     
     html, body, [class*="css"], .stApp {
         font-family: 'Outfit', sans-serif;
     }
     
-    /* Strict White-Label production overrides */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
     .stAppDeployButton {display: none !important;}
-    [data-testid="stDecoration"] {display: none !important;}
     [data-testid="stStatusWidget"] {display: none !important;}
     
     .app-title {
