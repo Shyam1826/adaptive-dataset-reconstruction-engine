@@ -21,151 +21,70 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize Session State tracking for the custom theme if not present
-if "app_theme" not in st.session_state:
-    st.session_state["app_theme"] = "light"
+# Premium Google Typeface Branding Stylesheet Injection with Strict White-Label Overrides
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;500;600;700&display=swap');
+    
+    /* Lock global font aesthetics */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        font-family: 'Outfit', sans-serif;
+    }
+    
+    /* Style background metrics cards and inner containers cleanly */
+    [data-testid="stMetricContainer"], .stDataFrame, div[data-testid="stBlock"] {
+        background-color: #f8fafc !important;
+        border-radius: 8px;
+    }
+    
+    /* ✅ FIXED HEADER SAFETY: Hides GitHub & Deploy buttons while keeping sidebar controls intact */
+    header, [data-testid="stHeader"], .stAppHeader {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
+    
+    /* Specifically target and wipe out the GitHub deploy section without breaking the navbar buttons */
+    .stAppDeployButton, [data-testid="stAppDeployButton"] {
+        display: none !important;
+    }
+    
+    /* Hide the default background decoration line */
+    [data-testid="stDecoration"] {
+        display: none !important;
+    }
+    
+    /* Ensure the sidebar open button is styled clearly and sits on top */
+    [data-testid="stSidebarCollapseButton"] {
+        background-color: transparent !important;
+        z-index: 999999;
+    }
+    
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stStatusWidget"] {display: none !important;}
+    
+    .app-title {
+        font-weight: 700;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 3rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .app-subtitle {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+        font-weight: 400;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 
 def main():
-    # ─── NAVIGATION BAR LIGHT/DARK MULTI-THEME TOGGLE ────────────────────
-    # Create an asymmetrical column layout at the very top of the main canvas
-    nav_col1, nav_col2 = st.columns([12, 1])
-    
-    with nav_col1:
-        # Application Title Headers
-        st.markdown("<h1 class='app-title' style='margin-top: -25px;'>⚡ AutoDataPrep</h1>", unsafe_allow_html=True)
-    
-    with nav_col2:
-        # Minimalist toggle using only Sun and Moon icons
-        current_theme = st.session_state["app_theme"]
-        theme_icon = "🌙" if current_theme == "light" else "☀️"
-        
-        # Explicit style container wrapper to align button cleanly with the header text
-        st.markdown("<div style='margin-top: -10px;'></div>", unsafe_allow_html=True)
-        if st.button(theme_icon, help="Toggle Interface Theme", use_container_width=True):
-            if current_theme == "light":
-                st.session_state["app_theme"] = "dark"
-            else:
-                st.session_state["app_theme"] = "light"
-            st.rerun()
-
-    # Dynamic Theme CSS Engine Configuration
-    if st.session_state["app_theme"] == "dark":
-        bg_color = "#0f172a"        # Deep slate dark background
-        text_color = "#f8fafc"      # Crisp white text
-        card_bg = "#1e293b"         # Lighter slate for inner containers
-        sidebar_bg = "#1e293b"      # Match sidebar to dark container palette
-        subtitle_color = "#94a3b8"  # Soft gray text
-        uploader_border = "#334155" # Slate gray border line
-        sidebar_arrow_color = "#f8fafc" # Force arrow icon to white
-    else:
-        bg_color = "#ffffff"        # Crisp white background
-        text_color = "#0f172a"      # Dark text
-        card_bg = "#f8fafc"         # Soft gray-white for inner containers
-        sidebar_bg = "#f1f5f9"      # Clean cool light-gray sidebar base
-        subtitle_color = "#6b7280"  # Slate gray text
-        uploader_border = "#e2e8f0" # Light gray border line
-        sidebar_arrow_color = "#0f172a" # Force arrow icon to dark slate
-
-    # Premium Google Typeface Branding Stylesheet Injection with full Global Overrides
-    st.markdown(f"""
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;500;600;700&display=swap');
-        
-        /* Apply dynamic theme colors to the MAIN app container */
-        html, body, [data-testid="stAppViewContainer"], .stApp {{
-            background-color: {bg_color} !important;
-            color: {text_color} !important;
-            font-family: 'Outfit', sans-serif;
-        }}
-        
-        /* Apply dynamic theme colors to the SIDEBAR container */
-        [data-testid="stSidebar"], section[data-testid="stSidebar"] > div {{
-            background-color: {sidebar_bg} !important;
-            color: {text_color} !important;
-        }}
-        
-        /* Ensure text inside sidebar matches the theme palette changes */
-        [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {{
-            color: {text_color} !important;
-        }}
-        
-        /* Style background metrics cards and inner containers dynamically */
-        [data-testid="stMetricContainer"], .stDataFrame, div[data-testid="stBlock"] {{
-            background-color: {card_bg} !important;
-            border-radius: 8px;
-        }}
-
-        /* 📁 BULLETPROOF UPLOAD ZONE OVERRIDES FOR SHADOW DOM ELEMENT LEAKS */
-        [data-testid="stFileUploader"], 
-        [data-testid="stFileUploader"] > section, 
-        [data-testid="stFileUploader"] div[role="button"],
-        .stFileUploaderDropzone {{
-            background-color: {card_bg} !important;
-            color: {text_color} !important;
-            border-color: {uploader_border} !important;
-        }}
-        
-        /* Override internal child text vectors inside the drag boxes */
-        [data-testid="stFileUploader"] text,
-        [data-testid="stFileUploader"] span,
-        [data-testid="stFileUploader"] small,
-        [data-testid="stFileUploader"] p {{
-            color: {text_color} !important;
-        }}
-        
-        /* Ensure the individual text items inside the drag box look sharp */
-        div[data-testid="stFileUploaderDropzone"] {{
-            border: 2px dashed {uploader_border} !important;
-            background-color: {card_bg} !important;
-        }}
-        
-        /* ✅ FIXED SIDEBAR ARROW VISIBILITY BUTTON */
-        [data-testid="stSidebarCollapseButton"] {{
-            background-color: transparent !important;
-            z-index: 999999 !important;
-        }}
-        [data-testid="stSidebarCollapseButton"] button {{
-            color: {sidebar_arrow_color} !important;
-            background-color: {card_bg} !important;
-            border-radius: 50% !important;
-            border: 1px solid {uploader_border} !important;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
-        }}
-        [data-testid="stSidebarCollapseButton"] svg {{
-            fill: {sidebar_arrow_color} !important;
-            color: {sidebar_arrow_color} !important;
-        }}
-        
-        /* Hide developer / hosting bars */
-        header, [data-testid="stHeader"], .stAppHeader {{
-            background-color: transparent !important;
-            background: transparent !important;
-        }}
-        .stAppDeployButton, [data-testid="stAppDeployButton"], [data-testid="stDecoration"] {{
-            display: none !important;
-        }}
-        #MainMenu {{visibility: hidden;}}
-        footer {{visibility: hidden;}}
-        [data-testid="stStatusWidget"] {{display: none !important;}}
-        
-        .app-title {{
-            font-weight: 700;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 3rem;
-            margin-bottom: 0.2rem;
-        }}
-        
-        .app-subtitle {{
-            font-size: 1.1rem;
-            color: {subtitle_color};
-            margin-bottom: 2rem;
-            font-weight: 400;
-        }}
-        </style>
-        """, unsafe_allow_html=True)
-
+    # Application Title Headers
+    st.markdown("<h1 class='app-title'>⚡ AutoDataPrep</h1>", unsafe_allow_html=True)
     st.markdown("<p class='app-subtitle'>Downstream Adaptive Dataset Profiling, Cleaning, & Model Preprocessing Engine</p>", unsafe_allow_html=True)
 
     # Instantiate layout tracking holders
