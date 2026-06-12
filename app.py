@@ -55,12 +55,16 @@ def main():
         card_bg = "#1e293b"         # Lighter slate for inner containers
         sidebar_bg = "#1e293b"      # Match sidebar to dark container palette
         subtitle_color = "#94a3b8"  # Soft gray text
+        uploader_border = "#334155" # Slate gray border line
+        sidebar_arrow_color = "#f8fafc" # Force arrow icon to white
     else:
         bg_color = "#ffffff"        # Crisp white background
         text_color = "#0f172a"      # Dark text
         card_bg = "#f8fafc"         # Soft gray-white for inner containers
         sidebar_bg = "#f1f5f9"      # Clean cool light-gray sidebar base
         subtitle_color = "#6b7280"  # Slate gray text
+        uploader_border = "#e2e8f0" # Light gray border line
+        sidebar_arrow_color = "#0f172a" # Force arrow icon to dark slate
 
     # Premium Google Typeface Branding Stylesheet Injection with full Global Overrides
     st.markdown(f"""
@@ -90,29 +94,56 @@ def main():
             background-color: {card_bg} !important;
             border-radius: 8px;
         }}
+
+        /* 📁 BULLETPROOF UPLOAD ZONE OVERRIDES FOR SHADOW DOM ELEMENT LEAKS */
+        [data-testid="stFileUploader"], 
+        [data-testid="stFileUploader"] > section, 
+        [data-testid="stFileUploader"] div[role="button"],
+        .stFileUploaderDropzone {{
+            background-color: {card_bg} !important;
+            color: {text_color} !important;
+            border-color: {uploader_border} !important;
+        }}
         
-        /* ✅ FIXED HEADER SAFETY: Hides GitHub & Deploy buttons while keeping sidebar controls intact */
+        /* Override internal child text vectors inside the drag boxes */
+        [data-testid="stFileUploader"] text,
+        [data-testid="stFileUploader"] span,
+        [data-testid="stFileUploader"] small,
+        [data-testid="stFileUploader"] p {{
+            color: {text_color} !important;
+        }}
+        
+        /* Ensure the individual text items inside the drag box look sharp */
+        div[data-testid="stFileUploaderDropzone"] {{
+            border: 2px dashed {uploader_border} !important;
+            background-color: {card_bg} !important;
+        }}
+        
+        /* ✅ FIXED SIDEBAR ARROW VISIBILITY BUTTON */
+        [data-testid="stSidebarCollapseButton"] {{
+            background-color: transparent !important;
+            z-index: 999999 !important;
+        }}
+        [data-testid="stSidebarCollapseButton"] button {{
+            color: {sidebar_arrow_color} !important;
+            background-color: {card_bg} !important;
+            border-radius: 50% !important;
+            border: 1px solid {uploader_border} !important;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+        }}
+        [data-testid="stSidebarCollapseButton"] svg {{
+            fill: {sidebar_arrow_color} !important;
+            color: {sidebar_arrow_color} !important;
+        }}
+        
+        /* Hide developer / hosting bars */
         header, [data-testid="stHeader"], .stAppHeader {{
             background-color: transparent !important;
             background: transparent !important;
         }}
-        
-        /* Specifically target and wipe out the GitHub deploy section without breaking the navbar buttons */
-        .stAppDeployButton, [data-testid="stAppDeployButton"] {{
+        .stAppDeployButton, [data-testid="stAppDeployButton"], [data-testid="stDecoration"] {{
             display: none !important;
         }}
-        
-        /* Hide the default background decoration line */
-        [data-testid="stDecoration"] {{
-            display: none !important;
-        }}
-        
-        /* Ensure the sidebar open button is styled clearly and sits on top */
-        [data-testid="stSidebarCollapseButton"] {{
-            background-color: transparent !important;
-            z-index: 999999;
-        }}
-        
         #MainMenu {{visibility: hidden;}}
         footer {{visibility: hidden;}}
         [data-testid="stStatusWidget"] {{display: none !important;}}
