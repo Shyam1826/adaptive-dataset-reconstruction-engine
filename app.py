@@ -28,16 +28,26 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;500;600;700&display=swap');
     
-    /* 🚨 STRICT ANTI-FLASH BLOCK: Hides the container spaces entirely before elements assemble 🚨 */
-    header, [data-testid="stHeader"], .stAppHeader, [data-testid="stDecoration"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0px !important;
+    /* ✅ FIXED HEADER SAFETY: Hides GitHub & Deploy buttons while keeping sidebar controls intact */
+    header, [data-testid="stHeader"], .stAppHeader {
+        background-color: transparent !important;
+        background: transparent !important;
     }
     
-    /* Force main workspace canvas to shift up and reclaim hidden header padding */
-    .main .block-container {
-        padding-top: 2rem !important;
+    /* Specifically target and wipe out the GitHub deploy section without breaking the navbar buttons */
+    .stAppDeployButton, [data-testid="stAppDeployButton"] {
+        display: none !important;
+    }
+    
+    /* Hide the default background decoration line */
+    [data-testid="stDecoration"] {
+        display: none !important;
+    }
+    
+    /* Ensure the sidebar open button is styled clearly and sits on top */
+    [data-testid="stSidebarCollapseButton"] {
+        background-color: transparent !important;
+        z-index: 999999;
     }
     
     html, body, [class*="css"], .stApp {
@@ -46,7 +56,6 @@ st.markdown("""
     
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    .stAppDeployButton {display: none !important;}
     [data-testid="stStatusWidget"] {display: none !important;}
     
     .app-title {
