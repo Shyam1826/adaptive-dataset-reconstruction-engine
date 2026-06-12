@@ -21,60 +21,91 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Premium Google Typeface Branding Stylesheet injection
-# Custom CSS for modern design aesthetics and white-label branding
-# Custom CSS for modern design aesthetics and strict white-label layout
-st.markdown("""
+# ─── SIDEBAR INTERFACE & THEME CONFIGURATION ───────────────────────────
+st.sidebar.markdown("### 🎨 Interface Settings")
+theme_selection = st.sidebar.radio(
+    "Application Theme",
+    options=["☀️ Light Mode", "🌙 Dark Mode"],
+    index=0,
+    horizontal=True,
+    label_visibility="collapsed"
+)
+st.sidebar.markdown("---")
+
+# Define color schemes dynamically based on user sidebar choice
+if "Dark Mode" in theme_selection:
+    bg_color = "#0f172a"        # Deep slate dark background
+    text_color = "#f8fafc"      # Crisp white text
+    card_bg = "#1e293b"         # Lighter slate for inner containers
+    subtitle_color = "#94a3b8"  # Soft gray text
+else:
+    bg_color = "#ffffff"        # Crisp white background
+    text_color = "#0f172a"      # Dark text
+    card_bg = "#f8fafc"         # Soft gray-white for inner containers
+    subtitle_color = "#6b7280"  # Slate gray text
+
+# Premium Google Typeface Branding Stylesheet injection with Strict White-Label Overrides
+st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;500;600;700&display=swap');
     
+    /* Apply dynamic theme variables globally */
+    html, body, [data-testid="stAppViewContainer"], .stApp {{
+        background-color: {bg_color} !important;
+        color: {text_color} !important;
+        font-family: 'Outfit', sans-serif;
+    }}
+    
+    /* Style background metrics cards and inner containers dynamically */
+    [data-testid="stMetricContainer"], .stDataFrame, div[data-testid="stBlock"] {{
+        background-color: {card_bg} !important;
+        border-radius: 8px;
+    }}
+    
     /* ✅ FIXED HEADER SAFETY: Hides GitHub & Deploy buttons while keeping sidebar controls intact */
-    header, [data-testid="stHeader"], .stAppHeader {
+    header, [data-testid="stHeader"], .stAppHeader {{
         background-color: transparent !important;
         background: transparent !important;
-    }
+    }}
     
     /* Specifically target and wipe out the GitHub deploy section without breaking the navbar buttons */
-    .stAppDeployButton, [data-testid="stAppDeployButton"] {
+    .stAppDeployButton, [data-testid="stAppDeployButton"] {{
         display: none !important;
-    }
+    }}
     
     /* Hide the default background decoration line */
-    [data-testid="stDecoration"] {
+    [data-testid="stDecoration"] {{
         display: none !important;
-    }
+    }}
     
     /* Ensure the sidebar open button is styled clearly and sits on top */
-    [data-testid="stSidebarCollapseButton"] {
+    [data-testid="stSidebarCollapseButton"] {{
         background-color: transparent !important;
         z-index: 999999;
-    }
+    }}
     
-    html, body, [class*="css"], .stApp {
-        font-family: 'Outfit', sans-serif;
-    }
+    #MainMenu {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    [data-testid="stStatusWidget"] {{display: none !important;}}
     
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    [data-testid="stStatusWidget"] {display: none !important;}
-    
-    .app-title {
+    .app-title {{
         font-weight: 700;
         background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 3rem;
         margin-bottom: 0.2rem;
-    }
+    }}
     
-    .app-subtitle {
+    .app-subtitle {{
         font-size: 1.1rem;
-        color: #6b7280;
+        color: {subtitle_color};
         margin-bottom: 2rem;
         font-weight: 400;
-    }
+    }}
     </style>
     """, unsafe_allow_html=True)
+
 
 def main():
     # Application Title Headers
